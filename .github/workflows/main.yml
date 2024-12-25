@@ -40,7 +40,7 @@ jobs:
           
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=apjg7/e_library_v4:${{ github.sha }}
+          IMAGE_NAME=apjg7/blog_v4:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
            echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
@@ -50,7 +50,7 @@ jobs:
         uses: loveholidays/gitops-action-yaml-updater@v1.0
         with:
           mode: IMAGE_TAG
-          container-name: e-library-v5-latest
+          container-name: blog-latest
           new-image-tag: ${{ env.IMAGE_TAG }}
           filepath: deployment.yml
 
