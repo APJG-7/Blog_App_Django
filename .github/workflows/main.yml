@@ -43,16 +43,18 @@ jobs:
           IMAGE_NAME=apjg7/e_library_v${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
-          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
-        
-
-      - name: Verify Deployment YAML
-        run: cat deployment.yml && ls -l deployment.yml
-
-      - name: Debug Image Name
-        run: echo "IMAGE_NAME is $IMAGE_NAME"
+           echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
 
       # Step 3: Update Deployment YAML
-      - name: Update Deployment YAML with Latest Image
-        run: |
-          sed -i "s|PLACEHOLDER_IMAGE|$IMAGE_NAME|g" deployment.yml
+      - name: Update image for Django container in deployment.yml
+        uses: loveholidays/gitops-action-yaml-updater@v1.0
+        with:
+          mode: IMAGE_TAG
+          container-name: e-library-v5-latest
+          new-image-tag: ${{ env.IMAGE_TAG }}
+          dir: .
+          files: deployment.yml
+
+      # Step 4: Verify Updated YAML
+      - name: Verify Updated Deployment YAML
+        run: cat deployment.yml
