@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django-elibrary-deployment
+  labels:
+    app: e-library-v4
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: e-library-v4
+  template:
+    metadata:
+      labels:
+        app: e-library-v4
+    spec:
+      containers:
+      - name: e-library-v5-latest
+        image: PLACEHOLDER_IMAGE
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+          - name: volume-v1
+            mountPath: /opt
+      volumes:
+        - name: volume-v1
+          configMap:
+            name: test-config
