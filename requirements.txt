@@ -1,0 +1,37 @@
+# Core Django framework
+Django==4.2.5
+
+# Database adapter for PostgreSQL
+psycopg2-binary==2.9.8
+
+# For environment variable management
+python-decouple==3.8
+
+# For serving static files in production
+whitenoise==6.5.0
+
+# Django Rest Framework (if using APIs)
+djangorestframework==3.15.0
+
+# For handling CORS (if needed)
+django-cors-headers==4.0.0
+
+# For testing
+pytest==7.4.0
+pytest-django==4.5.2
+
+# For security enhancements
+django-environ==0.10.0
+
+# For performance optimizations (optional)
+gunicorn==20.1.0
+
+# For linting and code style checks (optional)
+flake8==6.1.0
+
+# Additional utilities
+Pillow==10.0.0  # For image processing
+django-crispy-forms==1.14.0  # For improved form styling
+
+# Specify Python version (not required but helps avoid compatibility issues)
+# Requires-Python: >=3.9
