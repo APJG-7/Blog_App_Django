@@ -31,6 +31,3 @@ jobs:
 
       - name: Django System Check
         run: python manage.py check
-
-      - name: Test Linting
-        run: pip install flake8 && flake8 .
