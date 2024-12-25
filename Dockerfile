@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the application files
 COPY . /app
 
-# Install dependencies 
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Production Stage - Distroless image
@@ -17,10 +17,13 @@ FROM gcr.io/distroless/python3-debian11
 WORKDIR /app
 
 # Copy the dependencies and application files from the build stage
+COPY --from=build-stage /usr/local/lib/python3.10 /usr/local/lib/python3.10
+COPY --from=build-stage /usr/local/bin/python3 /usr/local/bin/python3
+COPY --from=build-stage /usr/local/bin/pip /usr/local/bin/pip
 COPY --from=build-stage /app /app
 
 # Expose the port Django will run on
 EXPOSE 8000
 
 # Run the application
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["/usr/local/bin/python3", "manage.py", "runserver", "0.0.0.0:8000"]
