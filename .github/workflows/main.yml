@@ -52,8 +52,8 @@ jobs:
           mode: IMAGE_TAG
           container-name: e-library-v5-latest
           new-image-tag: ${{ env.IMAGE_TAG }}
-          dir: .
-          files: deployment.yml
+          filepath: deployment.yml
+
 
       # Step 4: Verify Updated YAML
       - name: Verify Updated Deployment YAML
