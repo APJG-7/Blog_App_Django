@@ -40,7 +40,7 @@ jobs:
           
       - name: Build and Push Docker Image
         run: |
-          IMAGE_NAME=apjg7/e_library_v${{ github.sha }}
+          IMAGE_NAME=apjg7/e_library_v4:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
            echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
