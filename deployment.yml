@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: e-library-v5-latest
-        image: apjg7/e_library_v4:0a38053e85dbd138d98c08bfc6b2d8eb4980610c
+        image: apjg7/e_library_v4:d230c6011d56a2eef281be3b8c70b9990a6e7a53
         ports:
         - containerPort: 8000
         volumeMounts:
