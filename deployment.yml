@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: django-elibrary-deployment
+  name: django-blog-deployment
   labels:
-    app: e-library-v4
+    app: blog-v4
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: e-library-v4
+      app: blog-v4
   template:
     metadata:
       labels:
-        app: e-library-v4
+        app: blog-v4
     spec:
       containers:
-      - name: e-library-v5-latest
-        image: apjg7/e_library_v4:d230c6011d56a2eef281be3b8c70b9990a6e7a53
+      - name: blog-latest
+        image: apjg7/blog_v4:d230c6011d56a2eef281be3b8c70b9990a6e7a53
         ports:
         - containerPort: 8000
         volumeMounts:
