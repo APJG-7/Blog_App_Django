@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy the application files
 COPY . /app
 
-# Install dependencies
+# Install dependencies 
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Stage 2: Production Stage - Distroless image
