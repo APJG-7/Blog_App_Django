@@ -20,10 +20,3 @@ spec:
         image: apjg7/blog_v4:f9a741ef62bd633e6c99ec8447ffeb0339420ab1
         ports:
         - containerPort: 8000
-        volumeMounts:
-          - name: volume-v1
-            mountPath: /opt
-      volumes:
-        - name: volume-v1
-          configMap:
-            name: test-config
