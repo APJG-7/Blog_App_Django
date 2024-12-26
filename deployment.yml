@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: blog-latest
-        image: apjg7/blog_v4:d1ada4561f66ebee59ab07890488dfbdfa62e238
+        image: apjg7/blog_v4:e0554626fa596abf47d0e52b0b87cca25da97487
         ports:
         - containerPort: 8000
         volumeMounts:
