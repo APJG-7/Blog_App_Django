@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: django-blog-deployment
-  namespace: default # Specify your namespace here
+  namespace: default
   labels:
     app: blog-v4
 spec:
