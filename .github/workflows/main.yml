@@ -1,4 +1,4 @@
-name: E-library-Django
+name: Blog_Django
 
 on:
   push:
