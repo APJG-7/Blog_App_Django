@@ -31,20 +31,22 @@ jobs:
       - name: Django System Check
         run: python manage.py check
         
+      # Step 4: Log in to DockerHub
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
+
+      # Step 5: Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=apjg7/blog_v4:${{ github.sha }}
           docker build -t $IMAGE_NAME .
           docker push $IMAGE_NAME
-           echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
 
-      # Step 3: Update Deployment YAML
+      # Step 6: Update Deployment YAML
       - name: Update image for Django container in deployment.yml
         uses: loveholidays/gitops-action-yaml-updater@v1.0
         with:
@@ -53,17 +55,18 @@ jobs:
           new-image-tag: ${{ env.IMAGE_TAG }}
           filepath: deployment.yml
 
-
-      # Step 4: Verify Updated YAML
+      # Step 7: Verify Updated YAML
       - name: Verify Updated Deployment YAML
         run: cat deployment.yml
-        
+
+      # Step 8: Commit and Push Changes
       - name: Commit and Push Changes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          git pull --rebase origin main  # Handle remote changes
           git add deployment.yml
-          git commit -m "[CI Skip] Update image tag in deployment.yml"
+          git commit -m "[CI Skip] Update image tag in deployment.yml" || echo "No changes to commit"
           git push
