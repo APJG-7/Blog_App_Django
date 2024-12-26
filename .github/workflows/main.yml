@@ -62,12 +62,12 @@ jobs:
 
       # Step 9: Commit and Push Changes
       - name: Commit and Push Changes
-        uses: ad-m/github-push-action@v1
+        uses: EndBug/add-and-commit@v9
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main
-          force: true
-          commit_message: "[CI Skip] Update image tag in deployment.yml"
+          author_name: APJG-7
+          author_email: apj752003@gmail.com
+          message: 'Updated deployment'
+          add: 'deployment.yml'
 
       # Step 10: Verify Latest Commit
       - name: Verify Latest Commit
