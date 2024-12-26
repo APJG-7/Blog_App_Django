@@ -8,13 +8,15 @@ on:
       - '.github/*'
 
 jobs:
-  E-library:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
       # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for accurate rebases if needed
 
       # Step 2: Set up Python
       - name: Set up Python
@@ -28,17 +30,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # Step 4: Django System Check
       - name: Django System Check
         run: python manage.py check
-        
-      # Step 4: Log in to DockerHub
+
+      # Step 5: Log in to DockerHub
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 5: Build and Push Docker Image
+      # Step 6: Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=apjg7/blog_v4:${{ github.sha }}
@@ -46,7 +49,7 @@ jobs:
           docker push $IMAGE_NAME
           echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
 
-      # Step 6: Update Deployment YAML
+      # Step 7: Update Deployment YAML
       - name: Update image for Django container in deployment.yml
         uses: loveholidays/gitops-action-yaml-updater@v1.0
         with:
@@ -55,18 +58,21 @@ jobs:
           new-image-tag: ${{ env.IMAGE_TAG }}
           filepath: deployment.yml
 
-      # Step 7: Verify Updated YAML
+      # Step 8: Verify Updated Deployment YAML
       - name: Verify Updated Deployment YAML
         run: cat deployment.yml
 
-      # Step 8: Commit and Push Changes
+      # Step 9: Commit and Push Changes
       - name: Commit and Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: ad-m/github-push-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
+          force: true
+          commit_message: "[CI Skip] Update image tag in deployment.yml"
+
+      # Step 10: Verify Latest Commit
+      - name: Verify Latest Commit
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git pull --rebase origin main  # Handle remote changes
-          git add deployment.yml
-          git commit -m "[CI Skip] Update image tag in deployment.yml" || echo "No changes to commit"
-          git push
+          git fetch origin main
+          git log -1 --oneline
