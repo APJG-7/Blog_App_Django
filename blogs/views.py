@@ -10,7 +10,6 @@ def index(request):
     return render(request,'index.html',{'posts':posts})
 
 def post(request,pk):
-    post = Post.objects.get(id=pk)
     post.body = post.body.replace('\n', '<br>')
     return render(request,'post.html',{'post':post})
 
