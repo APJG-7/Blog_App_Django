@@ -32,16 +32,21 @@ jobs:
       # Step 4: Django System Check
       - name: Django System Check
         run: python manage.py check
+        
+      - name: Run Tests with Coverage
+        run: |
+          pip install coverage
+          coverage run --source='.' manage.py test
+          coverage xml -o coverage.xml
 
-      # Step 5: Codacy Analysis (Static Code Analysis)
-      - name: Codacy Analysis
+      # Step 5: Upload Coverage to Codacy
+      - name: Codacy Coverage Report
         run: |
           curl -Ls https://coverage.codacy.com/get.sh > codacy-coverage-reporter.sh
           chmod +x codacy-coverage-reporter.sh
           ./codacy-coverage-reporter.sh report \
             --project-token ${{ secrets.CODACY_PROJECT_TOKEN }} \
-            --commit-uuid ${{ github.sha }}
-
+            -r coverage.xml
       # Step 6: Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
