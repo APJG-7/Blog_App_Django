@@ -33,6 +33,16 @@ jobs:
       - name: Django System Check
         run: python manage.py check
 
+      # Step 5: Codacy Analysis (Static Code Analysis)
+      - name: Codacy Analysis
+        run: |
+          curl -Ls https://coverage.codacy.com/get.sh > codacy-coverage-reporter.sh
+          chmod +x codacy-coverage-reporter.sh
+          ./codacy-coverage-reporter.sh report \
+            --project-token ${{ secrets.CODACY_PROJECT_TOKEN }} \
+            --commit-uuid ${{ github.sha }}
+
+      # Step 6: Initialize CodeQL
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
         with:
@@ -44,14 +54,14 @@ jobs:
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v1
 
-      # Step 5: Log in to DockerHub
+      # Step 7: Log in to DockerHub
       - name: Log in to DockerHub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 6: Build and Push Docker Image
+      # Step 8: Build and Push Docker Image
       - name: Build and Push Docker Image
         run: |
           IMAGE_NAME=apjg7/blog_v4:${{ github.sha }}
@@ -59,7 +69,7 @@ jobs:
           docker push $IMAGE_NAME
           echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
 
-      # Step 7: Update Deployment YAML
+      # Step 9: Update Deployment YAML
       - name: Update image for Django container in deployment.yml
         uses: loveholidays/gitops-action-yaml-updater@v1.0
         with:
@@ -68,11 +78,11 @@ jobs:
           new-image-tag: ${{ env.IMAGE_TAG }}
           filepath: deployment.yml
 
-      # Step 8: Verify Updated Deployment YAML
+      # Step 10: Verify Updated Deployment YAML
       - name: Verify Updated Deployment YAML
         run: cat deployment.yml
 
-      # Step 9: Commit and Push Changes
+      # Step 11: Commit and Push Changes
       - name: Commit and Push Changes
         uses: EndBug/add-and-commit@v9
         with:
@@ -81,7 +91,7 @@ jobs:
           message: 'Updated deployment'
           add: 'deployment.yml'
 
-      # Step 10: Verify Latest Commit
+      # Step 12: Verify Latest Commit
       - name: Verify Latest Commit
         run: |
           git fetch origin main
